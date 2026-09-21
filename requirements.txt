@@ -1,0 +1,10 @@
+# Direct third-party imports used by the application
+fastapi
+pydantic
+pypdf
+python-dotenv
+lyzr-adk
+
+# Required to run the FastAPI server and process UploadFile form uploads
+uvicorn[standard]
+python-multipart
