@@ -3,314 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AI ESG Carbon Compliance Copilot</title>
-
-    <!-- IMPORTANT: CSS -->
-    <link rel="stylesheet" href="/style.css">
+    <meta name="theme-color" content="#123d75">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232a78d6'/%3E%3Cpath d='M32 12l4.7 15.3L52 32l-15.3 4.7L32 52l-4.7-15.3L12 32l15.3-4.7L32 12z' fill='white'/%3E%3C/svg%3E">
+    <title>ESG Carbon Copilot</title>
+    <link rel="stylesheet" href="/style.css?v=4">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
+<div class="layout-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-mark">✦</span>
+            <h2>ESG Carbon Copilot</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#profile" class="nav-link active">Company Profile</a>
+            <a href="#scorecard" class="nav-link">ESG Scorecard</a>
+            <a href="#environmental" class="nav-link">Environmental</a>
+            <a href="#social" class="nav-link">Social</a>
+            <a href="#governance" class="nav-link">Governance</a>
+            <a href="#risks" class="nav-link">Risk Engine & AI</a>
+            <a href="#methodology" class="nav-link">Methodology</a>
+        </nav>
+        <button id="generateReportBtn" class="button button-primary" style="margin-top: 20px;">Generate ESG Report</button>
+    </aside>
+    <div class="main-content-wrapper">
+<div class="app-shell">
 
-<div class="container">
-
-    <!-- HEADER -->
-    <header class="header">
-        <div>
-            <h1>🌱 AI ESG Carbon Compliance Copilot</h1>
-            <p>
-                Autonomous ESG carbon accounting, audit trail and compliance analysis
-            </p>
+    <header class="topbar">
+        <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true">✦</div>
+            <div>
+                <span class="eyebrow">ESG OPERATIONS</span>
+                <h1>ESG Carbon Copilot</h1>
+            </div>
         </div>
 
-        <button class="refresh-btn" onclick="loadDashboard()">
-            ↻ Refresh
-        </button>
+        <div class="topbar-actions">
+            <span class="status-badge status-review">
+                <span class="status-dot" aria-hidden="true"></span>
+                Emission Factors: UK Government 2026 <span class="badge-divider">|</span> Activity Data: User-provided <span class="badge-divider">|</span> Methodology: Deterministic calculation
+            </span>
+            <button class="button button-quiet refresh-btn" onclick="loadDashboard()" type="button">
+                <span class="button-icon" aria-hidden="true">↻</span>
+                Refresh
+            </button>
+        </div>
     </header>
 
-
-    <!-- DASHBOARD CARDS -->
-    <section class="dashboard-grid">
-
-        <div class="dashboard-card">
-            <span>Total CO₂e</span>
-            <strong id="totalEmissions">0</strong>
-            <small>kg CO₂e</small>
-        </div>
-
-        <div class="dashboard-card">
-            <span>Scope 1</span>
-            <strong id="scope1">0</strong>
-            <small>kg CO₂e</small>
-        </div>
-
-        <div class="dashboard-card">
-            <span>Scope 2</span>
-            <strong id="scope2">0</strong>
-            <small>kg CO₂e</small>
-        </div>
-
-        <div class="dashboard-card">
-            <span>Scope 3</span>
-            <strong id="scope3">0</strong>
-            <small>kg CO₂e</small>
-        </div>
-
-    </section>
-
-
-    <!-- STATUS -->
-    <section class="status-grid">
-
-        <div class="status-card">
-            <span>Records Processed</span>
-            <strong id="recordsProcessed">0</strong>
-        </div>
-
-        <div class="status-card verified">
-            <span>Verified</span>
-            <strong id="verifiedRecords">0</strong>
-        </div>
-
-        <div class="status-card review">
-            <span>Review Required</span>
-            <strong id="reviewRecords">0</strong>
-        </div>
-
-    </section>
-
-
-    <!-- EMISSION BREAKDOWN -->
-    <section class="section">
-
-        <div class="section-header">
-            <div>
-                <h2>📊 Emission Breakdown</h2>
-                <p>Distribution of recorded emissions by GHG Protocol scope.</p>
+    
+    <main class="page-content">
+        <!-- COMPANY PROFILE -->
+        <section id="profile" class="dashboard-section active-section">
+            <div class="panel">
+                <div class="panel-heading"><h2>Professional Company Profile</h2></div>
+                <div class="profile-grid" id="companyProfile">
+                    <!-- Populated by JS -->
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="bar-section">
-
-            <div class="bar-row">
-                <div class="bar-label">
-                    <span>Scope 1</span>
-                    <strong id="scope1BarValue">0 kg</strong>
+        <!-- ESG SCORECARD -->
+        <section id="scorecard" class="dashboard-section">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>ESG Scorecard</h2>
+                    <span class="status-badge status-info">Prototype Scoring</span>
+                </div>
+                <div class="methodology-note">Methodology: Data Quality reflects completeness and validity of data. ESG Performance reflects metrics relative to industry standards.</div>
+                
+                <h3>Data Quality Scores</h3>
+                <div class="scorecard-grid">
+                    <div class="score-card overall"><h3>Overall Quality</h3><div class="score-value" id="dqOverall">-</div></div>
+                    <div class="score-card env"><h3>Environmental</h3><div class="score-value" id="dqEnv">-</div></div>
+                    <div class="score-card soc"><h3>Social</h3><div class="score-value" id="dqSoc">-</div></div>
+                    <div class="score-card gov"><h3>Governance</h3><div class="score-value" id="dqGov">-</div></div>
                 </div>
 
-                <div class="bar-background">
-                    <div
-                        id="scope1Bar"
-                        class="bar scope1-bar"
-                        style="width:0%">
+                <h3 style="margin-top: 20px;">ESG Performance Scores</h3>
+                <div class="scorecard-grid">
+                    <div class="score-card overall">
+                        <h3>Overall Performance</h3>
+                        <div class="score-value" id="perfOverall">-</div>
+                    </div>
+                    <div class="score-card env">
+                        <h3>Environmental</h3>
+                        <div class="score-value" id="perfEnv">-</div>
+                        <button class="button button-quiet" onclick="showScoreDetails('Environmental')" style="margin-top: 10px; font-size: 0.8rem; padding: 2px 8px;">Why this score?</button>
+                    </div>
+                    <div class="score-card soc">
+                        <h3>Social</h3>
+                        <div class="score-value" id="perfSoc">-</div>
+                        <button class="button button-quiet" onclick="showScoreDetails('Social')" style="margin-top: 10px; font-size: 0.8rem; padding: 2px 8px;">Why this score?</button>
+                    </div>
+                    <div class="score-card gov">
+                        <h3>Governance</h3>
+                        <div class="score-value" id="perfGov">-</div>
+                        <button class="button button-quiet" onclick="showScoreDetails('Governance')" style="margin-top: 10px; font-size: 0.8rem; padding: 2px 8px;">Why this score?</button>
                     </div>
                 </div>
-            </div>
 
-
-            <div class="bar-row">
-                <div class="bar-label">
-                    <span>Scope 2</span>
-                    <strong id="scope2BarValue">0 kg</strong>
+                <div class="chart-container" style="height: 300px; margin-top: 20px;">
+                    <canvas id="esgTrendChart"></canvas>
                 </div>
-
-                <div class="bar-background">
-                    <div
-                        id="scope2Bar"
-                        class="bar scope2-bar"
-                        style="width:0%">
+            </div>
+        </section>
+        
+        <!-- SOCIAL MODULE -->
+        <section id="social" class="dashboard-section">
+            <div class="panel">
+                <div class="panel-heading"><h2>Social Module</h2></div>
+                <div class="module-grid" id="socialMetrics">
+                    <!-- Populated by JS -->
+                </div>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+                <div class="upload-section">
+                    <h3>Social Dataset Management</h3>
+                    <p>Upload Social metrics CSV or download a template to get started.</p>
+                    <div class="file-picker" style="margin-top: 10px;">
+                        <input type="file" id="socialFile" accept=".csv">
                     </div>
-                </div>
-            </div>
-
-
-            <div class="bar-row">
-                <div class="bar-label">
-                    <span>Scope 3</span>
-                    <strong id="scope3BarValue">0 kg</strong>
-                </div>
-
-                <div class="bar-background">
-                    <div
-                        id="scope3Bar"
-                        class="bar scope3-bar"
-                        style="width:0%">
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                        <button class="button button-primary" onclick="uploadSocialFile()" type="button">Upload Social Data</button>
+                        <a href="/template/social" class="button button-secondary" download>Download Social CSV Template</a>
                     </div>
+                    <div id="socialUploadResult" class="result-region" aria-live="polite"></div>
                 </div>
             </div>
+        </section>
 
-        </div>
+        <!-- GOVERNANCE MODULE -->
+        <section id="governance" class="dashboard-section">
+            <div class="panel">
+                <div class="panel-heading"><h2>Governance Module</h2></div>
+                <div class="module-grid" id="governanceMetrics">
+                    <!-- Populated by JS -->
+                </div>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+                <div class="upload-section">
+                    <h3>Governance Dataset Management</h3>
+                    <p>Upload Governance metrics CSV or download a template to get started.</p>
+                    <div class="file-picker" style="margin-top: 10px;">
+                        <input type="file" id="governanceFile" accept=".csv">
+                    </div>
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                        <button class="button button-primary" onclick="uploadGovernanceFile()" type="button">Upload Governance Data</button>
+                        <a href="/template/governance" class="button button-secondary" download>Download Governance CSV Template</a>
+                    </div>
+                    <div id="governanceUploadResult" class="result-region" aria-live="polite"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- RISKS & RECOMMENDATIONS -->
+        <section id="risks" class="dashboard-section">
+            <div class="panel">
+                <div class="panel-heading"><h2>ESG Risk Engine & AI Recommendations</h2></div>
+                <h3>Identified Risks</h3>
+                <div id="riskList" class="risk-list"></div>
+                <h3 style="margin-top:20px;">AI-Style Recommendations</h3>
+                <div id="recList" class="rec-list"></div>
+            </div>
+        </section>
 
-    </section>
+        <!-- METHODOLOGY -->
+        <section id="methodology" class="dashboard-section">
+            <div class="panel">
+                <div class="panel-heading"><h2>Scoring & Methodology</h2></div>
+                <div style="padding: 20px;">
+                    <h3>ESG Score Limitations (Prototype)</h3>
+                    <p>The current ESG scoring system calculates two distinct scores per pillar: Data Quality and ESG Performance. Data Quality indicates the completeness and verifiability of uploaded data (calculated as the percentage of valid records out of total records submitted). ESG Performance measures the uploaded metrics relative to configured industry benchmarks (using a weighted average of normalized metric scores).</p>
+                    
+                    <h3 style="margin-top: 20px;">Data Quality Engine</h3>
+                    <p>The Risk Engine continuously monitors data ingestion. Data Quality scores decrease if there are missing values, unverified emission factors, invalid units, or other integrity errors. Records flagged as 'Review Required' or 'Unverified' must be corrected to achieve a 100% Data Quality score.</p>
+                    
+                    <h3 style="margin-top: 20px;">Environmental Calculations & Scoring</h3>
+                    <p>Environmental emissions are deterministically calculated based on Activity, Quantity, and Unit. The system maps these inputs to verified emission factors from the UK Government 2026 factors database. The total CO₂e is compared against an industry benchmark (e.g., lower emissions score higher) to compute the Environmental Performance score.</p>
+                    
+                    <h3 style="margin-top: 20px;">Social & Governance Metrics</h3>
+                    <p>Social and Governance data are ingested from uploaded CSVs. Each metric (e.g., employee turnover, board independence) contributes to the respective pillar's performance score. The score is calculated by normalizing each metric's value against its specific industry benchmark and applying a weight. For example, higher board independence increases the Governance score, while higher employee turnover decreases the Social score.</p>
+                </div>
+            </div>
+        </section>
 
-
-    <!-- UPLOAD -->
-    <section class="section">
-
-        <div class="section-header">
+        <section id="environmental" class="dashboard-section"><section class="page-intro">
             <div>
-                <h2>📄 Upload ESG Document</h2>
-                <p>
-                    Upload a PDF invoice or CSV activity dataset.
-                </p>
+                <span class="eyebrow">CARBON ACCOUNTING CONTROL CENTER</span>
+                <h2>Evidence-led emissions oversight.</h2>
+                <p>Bring activity data into one auditable workspace for review, calculation, and ESG decision support.</p>
+                <p class="dataset-disclaimer">UK Government 2026 factors — suitable for UK activity data, not universal/global factors.</p>
             </div>
-        </div>
-
-        <div class="upload-box">
-
-            <input
-                type="file"
-                id="dataFile"
-                accept=".pdf,.csv"
-            >
-
-            <button onclick="uploadDataFile()">
-                Upload & Analyze
-            </button>
-
-        </div>
-
-        <div id="uploadResult"></div>
-
-    </section>
-
-
-    <!-- MANUAL CALCULATION -->
-    <section class="section">
-
-        <div class="section-header">
-            <div>
-                <h2>🧮 Manual Carbon Calculation</h2>
-                <p>
-                    Calculate emissions using the deterministic factor database.
-                </p>
+            <div class="intro-note">
+                <span class="intro-note-icon" aria-hidden="true">✓</span>
+                <span>Deterministic calculations<br><strong>Audit-ready by design</strong></span>
             </div>
-        </div>
+        </section>
 
-        <div class="form-grid">
+        <section class="kpi-grid" aria-label="Emissions summary">
+            <article class="kpi-card kpi-card-total">
+                <div class="kpi-card-header">
+                    <div class="kpi-label"><span class="kpi-icon" aria-hidden="true">Σ</span> Total emissions</div>
+                    <span class="kpi-accent" aria-hidden="true"></span>
+                </div>
+                <strong class="kpi-value" id="totalEmissions">0</strong>
+                <span class="kpi-unit">kg CO₂e</span>
+                <div class="kpi-footnote"><span class="mini-dot"></span>Across current audit records</div>
+            </article>
 
-            <input
-                type="text"
-                id="activity"
-                placeholder="Activity e.g. Electricity"
-            >
+            <article class="kpi-card kpi-card-scope scope-one-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-label"><span class="scope-icon scope-one-icon" aria-hidden="true">01</span> Scope 1</div>
+                    <span class="kpi-context">Direct</span>
+                </div>
+                <strong class="kpi-value" id="scope1">0</strong>
+                <span class="kpi-unit">kg CO₂e</span>
+                <div class="kpi-track"><span class="kpi-track-fill scope-one-fill"></span></div>
+            </article>
 
-            <input
-                type="number"
-                id="quantity"
-                placeholder="Quantity"
-            >
+            <article class="kpi-card kpi-card-scope scope-two-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-label"><span class="scope-icon scope-two-icon" aria-hidden="true">02</span> Scope 2</div>
+                    <span class="kpi-context">Purchased energy</span>
+                </div>
+                <strong class="kpi-value" id="scope2">0</strong>
+                <span class="kpi-unit">kg CO₂e</span>
+                <div class="kpi-track"><span class="kpi-track-fill scope-two-fill"></span></div>
+            </article>
 
-            <input
-                type="text"
-                id="unit"
-                placeholder="Unit e.g. kWh"
-            >
+            <article class="kpi-card kpi-card-scope scope-three-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-label"><span class="scope-icon scope-three-icon" aria-hidden="true">03</span> Scope 3</div>
+                    <span class="kpi-context">Value chain</span>
+                </div>
+                <strong class="kpi-value" id="scope3">0</strong>
+                <span class="kpi-unit">kg CO₂e</span>
+                <div class="kpi-track"><span class="kpi-track-fill scope-three-fill"></span></div>
+            </article>
+        </section>
 
-            <button onclick="calculateEmission()">
-                Calculate
-            </button>
+        <section class="status-grid" aria-label="Processing status">
+            <article class="status-card">
+                <div class="status-card-label"><span class="status-card-icon" aria-hidden="true">◷</span> Records processed</div>
+                <strong id="recordsProcessed">0</strong>
+                <span class="status-card-note">Total audit entries</span>
+            </article>
+            <article class="status-card status-card-verified">
+                <div class="status-card-label"><span class="status-card-icon" aria-hidden="true">✓</span> Verified</div>
+                <strong id="verifiedRecords">0</strong>
+                <span class="status-card-note">Ready for reporting</span>
+            </article>
+            <article class="status-card status-card-review">
+                <div class="status-card-label"><span class="status-card-icon" aria-hidden="true">!</span> Review required</div>
+                <strong id="reviewRecords">0</strong>
+                <span class="status-card-note">Needs evidence or approval</span>
+            </article>
+        </section>
 
-        </div>
-
-        <div id="calculationResult"></div>
-
-    </section>
-
-
-    <!-- AI ANALYSIS -->
-    <section class="section ai-section">
-
-        <div class="section-header">
-
-            <div>
-                <h2>🤖 AI ESG Compliance Analysis</h2>
-
-                <p>
-                    Analyze ESG activity using the Lyzr AI Agent
-                    with deterministic backend tools.
-                </p>
+        <section class="panel breakdown-panel">
+            <div class="panel-heading panel-heading-inline">
+                <div>
+                    <span class="eyebrow">PORTFOLIO MIX</span>
+                    <h2>Emission breakdown</h2>
+                    <p>Distribution of recorded emissions by GHG Protocol scope.</p>
+                </div>
+                <span class="panel-chip"><span class="chip-dot"></span> Current records</span>
             </div>
 
-        </div>
+            <div class="bar-section" aria-label="Emission breakdown by scope">
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span class="bar-name"><span class="scope-marker scope-one-marker"></span>Scope 1 <small>Direct emissions</small></span>
+                        <strong id="scope1BarValue">0 kg</strong>
+                    </div>
+                    <div class="bar-background"><div id="scope1Bar" class="bar scope1-bar" style="width:0%" role="progressbar" aria-label="Scope 1 emissions" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div>
+                </div>
 
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span class="bar-name"><span class="scope-marker scope-two-marker"></span>Scope 2 <small>Purchased energy</small></span>
+                        <strong id="scope2BarValue">0 kg</strong>
+                    </div>
+                    <div class="bar-background"><div id="scope2Bar" class="bar scope2-bar" style="width:0%" role="progressbar" aria-label="Scope 2 emissions" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div>
+                </div>
 
-        <div class="form-grid">
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <span class="bar-name"><span class="scope-marker scope-three-marker"></span>Scope 3 <small>Value-chain emissions</small></span>
+                        <strong id="scope3BarValue">0 kg</strong>
+                    </div>
+                    <div class="bar-background"><div id="scope3Bar" class="bar scope3-bar" style="width:0%" role="progressbar" aria-label="Scope 3 emissions" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div>
+                </div>
+            </div>
+        </section>
 
-            <input
-                type="text"
-                id="aiActivity"
-                placeholder="Activity e.g. Electricity"
-            >
+        <section class="workspace-grid">
+            <section class="panel tool-panel upload-panel">
+                <div class="panel-heading">
+                    <div class="panel-title-row"><span class="tool-icon tool-icon-upload" aria-hidden="true">↑</span><span class="eyebrow">EVIDENCE INTAKE</span></div>
+                    <h2>Upload ESG document</h2>
+                    <p>Submit a PDF invoice or CSV activity dataset for deterministic review.</p>
+                </div>
 
-            <input
-                type="number"
-                id="aiQuantity"
-                placeholder="Quantity"
-            >
+                <div class="file-picker">
+                    <div class="file-picker-icon" aria-hidden="true">⌁</div>
+                    <div class="file-picker-copy">
+                        <label for="dataFile">Choose a document</label>
+                        <span>PDF or CSV · processed locally</span>
+                    </div>
+                    <input type="file" id="dataFile" accept=".pdf,.csv">
+                </div>
 
-            <input
-                type="text"
-                id="aiUnit"
-                placeholder="Unit e.g. kWh"
-            >
+                <button class="button button-primary button-wide" onclick="uploadDataFile()" type="button">
+                    <span class="button-icon" aria-hidden="true">↑</span> Upload &amp; analyze
+                </button>
+                <div id="uploadResult" class="result-region" aria-live="polite"></div>
+            </section>
 
-            <button onclick="runAIAnalysis()">
-                Analyze with Lyzr AI
-            </button>
+            <section class="panel tool-panel calculation-panel">
+                <div class="panel-heading">
+                    <div class="panel-title-row"><span class="tool-icon tool-icon-calc" aria-hidden="true">∑</span><span class="eyebrow">CONTROLLED CALCULATION</span></div>
+                    <h2>Manual carbon calculation</h2>
+                    <p>Use the factor registry to create a traceable calculation record.</p>
+                </div>
 
-        </div>
+                <div class="form-grid">
+                    <label class="field"><span>Activity</span><input type="text" id="activity" placeholder="e.g. Electricity"></label>
+                    <label class="field"><span>Quantity</span><input type="number" id="quantity" placeholder="e.g. 1500"></label>
+                    <label class="field"><span>Unit</span><input type="text" id="unit" placeholder="e.g. kWh"></label>
+                </div>
+                <button class="button button-secondary button-wide" onclick="calculateEmission()" type="button">
+                    <span class="button-icon" aria-hidden="true">→</span> Calculate emissions
+                </button>
+                <div id="calculationResult" class="result-region" aria-live="polite"></div>
+            </section>
+        </section>
 
-
-        <div id="aiResult"></div>
-
-    </section>
-
-
-    <!-- AUDIT -->
-    <section class="section">
-
-        <div class="section-header">
-
-            <div>
-                <h2>🔎 Audit & Evidence Trail</h2>
-
-                <p>
-                    Every calculation is linked to source data,
-                    emission factor and formula.
-                </p>
+        <section class="panel ai-panel">
+            <div class="ai-panel-topline">
+                <div class="panel-heading">
+                    <div class="panel-title-row"><span class="tool-icon tool-icon-ai" aria-hidden="true">✦</span><span class="eyebrow">ASSISTED REVIEW</span></div>
+                    <h2>AI ESG compliance analysis</h2>
+                    <p>Ask the configured Lyzr agent to explain the deterministic result and identify review needs.</p>
+                </div>
+                <span class="ai-label"><span class="ai-pulse"></span> Lyzr AI</span>
             </div>
 
-        </div>
-
-        <div id="auditRecords">
-
-            <div class="empty-state">
-                Loading audit records...
+            <div class="form-grid ai-form-grid">
+                <label class="field"><span>Activity</span><input type="text" id="aiActivity" placeholder="e.g. Electricity"></label>
+                <label class="field"><span>Quantity</span><input type="number" id="aiQuantity" placeholder="e.g. 1500"></label>
+                <label class="field"><span>Unit</span><input type="text" id="aiUnit" placeholder="e.g. kWh"></label>
+                <button class="button button-ai" onclick="runAIAnalysis()" type="button"><span class="button-icon" aria-hidden="true">✦</span> Analyze with AI</button>
             </div>
+            <div id="aiResult" class="result-region" aria-live="polite"></div>
+        </section>
 
+        <section class="panel audit-panel">
+            <div class="panel-heading panel-heading-inline">
+                <div>
+                    <span class="eyebrow">CONTROL EVIDENCE</span>
+                    <h2>Audit &amp; evidence trail</h2>
+                    <p>Every calculation is linked to its source data, factor, status, and formula.</p>
+                </div>
+                <span class="audit-lock"><span aria-hidden="true">⌁</span> Immutable history</span>
+            </div>
+            <div class="audit-controls">
+                <input type="text" id="auditSearch" placeholder="Search activity/metric..." oninput="filterAudit()">
+                <div class="audit-filters">
+                    <button class="filter-btn active" data-filter="ALL" onclick="setAuditFilter('ALL')">All</button>
+                    <button class="filter-btn" data-filter="VERIFIED" onclick="setAuditFilter('VERIFIED')">Verified</button>
+                    <button class="filter-btn" data-filter="REVIEW_REQUIRED" onclick="setAuditFilter('REVIEW_REQUIRED')">Review Required</button>
+                    <button class="filter-btn" data-filter="UNVERIFIED" onclick="setAuditFilter('UNVERIFIED')">Invalid</button>
+                </div>
+            </div>
+            <div id="auditRecords" class="audit-records" aria-live="polite">
+                <div class="audit-table-wrapper">
+                    <table class="audit-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Activity</th>
+                                <th>Input</th>
+                                <th>Unit</th>
+                                <th>Emission Factor</th>
+                                <th>CO₂e (kg)</th>
+                                <th>Source</th>
+                                <th>Status</th>
+                                <th>Review Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <tr><td colspan="11" class="empty-state"><span class="loading-orb" aria-hidden="true"></span> Loading audit records...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECORD DETAILS MODAL -->
+        <div id="recordModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <div id="modalBody"></div>
+            </div>
         </div>
+        </section>
+    </section></main>
 
-    </section>
-
-
-    <!-- FOOTER -->
-    <footer>
-
-        <p>
-            AI ESG Carbon Compliance Copilot
-        </p>
-
-        <span>
-            Deterministic calculations • Auditability • Lyzr AI
-        </span>
-
+    <footer class="app-footer">
+        <div><strong>ESG Carbon Copilot</strong><span>ESG Analytics, Carbon Intelligence & Risk Review</span></div>
+        <span>ESG operations workspace</span>
     </footer>
-
 </div>
 
-
-<script src="/app.js"></script>
-
+    <script src="/app.js?v=5"></script>
+</div></div>
 </body>
 </html>
+
+
+
+

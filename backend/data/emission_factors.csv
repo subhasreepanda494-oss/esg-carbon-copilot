@@ -1,7 +1,7 @@
-activity,unit,factor,source,year,status
-Electricity,kWh,0.207,UK Government GHG Conversion Factors,2026,DEMO
-Diesel,L,2.68,Demo Emission Factor Database,2026,DEMO
-Petrol,L,2.31,Demo Emission Factor Database,2026,DEMO
-Natural Gas,kWh,0.18,Demo Emission Factor Database,2026,DEMO
-Air Travel,km,0.15,Demo Emission Factor Database,2026,DEMO
-Freight,tonne-km,0.10,Demo Emission Factor Database,2026,DEMO
+activity,unit,factor,source,year,status,scope,factor_version,source_url,source_row_id,review_reason
+Electricity,kWh,0.13096,UK Government GHG Conversion Factors for Company Reporting,2026,OFFICIAL,Scope 2,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,7_400_4000_5_1,
+Diesel,L,,UK Government GHG Conversion Factors for Company Reporting,2026,REVIEW_REQUIRED,Scope 1,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,1_101_1011_8_1;1_101_1012_8_1,"Direct matching requires the diesel specification: average biofuel blend or 100% mineral diesel."
+Petrol,L,,UK Government GHG Conversion Factors for Company Reporting,2026,REVIEW_REQUIRED,Scope 1,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,1_101_1017_8_1;1_101_1018_8_1,"Direct matching requires the petrol specification: average biofuel blend or 100% mineral petrol."
+Natural Gas,kWh,,UK Government GHG Conversion Factors for Company Reporting,2026,REVIEW_REQUIRED,Scope 1,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,1_100_1004_7_1;1_100_1004_6_1,"Direct matching requires the calorific basis: kWh (Net CV) or kWh (Gross CV)."
+Air Travel,km,,UK Government GHG Conversion Factors for Company Reporting,2026,REVIEW_REQUIRED,Scope 3,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,,"No direct match: official air-travel factors require passenger.km, route distance, cabin class, and radiative-forcing selection."
+Freight,tonne-km,,UK Government GHG Conversion Factors for Company Reporting,2026,REVIEW_REQUIRED,Scope 3,1.2,https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx,,"No direct match: official freight factors require the vehicle class and fuel type and use tonne.km."

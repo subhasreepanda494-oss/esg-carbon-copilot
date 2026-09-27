@@ -2,7 +2,7 @@
 
 A beginner-friendly FastAPI application for uploading ESG activity data, classifying emissions into GHG Protocol scopes, calculating CO₂e when an approved emission factor is available, and maintaining an audit trail.
 
-> **Important:** The emission factors currently included in this project are marked `DEMO`. They must not be treated as official factors. Current results will normally be marked `REVIEW_REQUIRED` and will not produce verified emissions totals.
+> **Important:** The registry uses the final **UK Government GHG Conversion Factors 2026** flat file (version 1.2). The supported Electricity/kWh row is directly verified from that source; all other current activity/unit pairs remain `REVIEW_REQUIRED` unless their official match is unambiguous. These factors are suitable for UK activity data, not universal/global factors.
 
 ---
 
@@ -404,39 +404,39 @@ A successful calculation displays:
 
 ---
 
-## Demo-only emission factors
+## UK Government 2026 emission factors
 
-The current file is:
+The factor registry is:
 
 ```text
 backend\data\emission_factors.csv
 ```
 
-The included rows are marked:
+It is sourced from the official DESNZ publication:
+
+- Publication: <https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026>
+- Flat file: <https://assets.publishing.service.gov.uk/media/6a6c9748862aaf18d9c62ac9/ghg-conversion-factors-2026-flat-format-revised.xlsx>
+- Dataset status: `Final`
+- Dataset version: `1.2`
+- Dataset year: `2026`
+
+The directly verified registry row currently supported by this MVP is:
 
 ```text
-DEMO
+Electricity, kWh, 0.13096 kg CO2e/kWh
+Official row: 7_400_4000_5_1
+Scope: Scope 2
 ```
 
-This means they are examples for development and testing only.
-
-The backend intentionally does **not** treat these factors as official. Known activities with demo factors are returned as:
+For example:
 
 ```text
-REVIEW_REQUIRED
+1500 kWh × 0.13096 kg CO2e/kWh = 196.44 kg CO2e
 ```
 
-and their calculated emissions are set to zero in the audit trail until the factor is verified.
+Only rows marked `OFFICIAL` after direct verification against the flat file are calculated. Diesel, Petrol, Natural Gas, Air Travel, and Freight remain `REVIEW_REQUIRED` because the current activity/unit inputs do not select one unambiguous official row. The registry records the review reason and official source URL rather than retaining unsupported demo values.
 
-Therefore, it is expected that:
-
-- Manual calculations may return `400` with an unverified-factor message.
-- CSV uploads may complete processing but show review-required records.
-- The dashboard may show zero verified emissions.
-- The audit trail may contain records with `REVIEW_REQUIRED`.
-- Results must not be used for regulatory, financial, or sustainability disclosures.
-
-Before using this application for real ESG reporting, replace the demo data with an approved and governed emission-factor dataset. The replacement data should include appropriate source documentation, geography, reporting year, methodology, unit definitions, and approval status.
+The factors are **suitable for UK activity data, not universal/global factors**. They must not be treated as regulatory advice or used for formal disclosures without appropriate governance and review.
 
 ---
 
@@ -448,7 +448,7 @@ An approved factor was found and the deterministic calculation was completed.
 
 ### `REVIEW_REQUIRED`
 
-A factor was found, but it is marked as demo, provisional, or otherwise not approved for official reporting.
+The current activity/unit input does not select one direct, unambiguous official UK Government 2026 factor, so no emissions are calculated.
 
 ### `UNVERIFIED`
 
@@ -498,7 +498,7 @@ The agent is instructed to:
 - Use the deterministic scope classifier.
 - Use the deterministic emission-factor lookup.
 - Avoid inventing emission factors.
-- Identify demo and unverified factors.
+- Identify official, review-required, and unverified factor states.
 - Explain the calculation formula when applicable.
 - State when review is required.
 
@@ -575,7 +575,7 @@ Check that:
 
 ### A calculation says that review is required
 
-This is expected with the current data because the factors in `backend/data/emission_factors.csv` are marked `DEMO`.
+This is expected when the activity/unit input does not select one direct, unambiguous UK Government 2026 factor. The registry intentionally keeps those rows as `REVIEW_REQUIRED` rather than selecting an estimate.
 
 ### A PDF cannot be processed
 
@@ -592,7 +592,7 @@ Confirm that the PDF:
 
 The current project does not yet include:
 
-- Production-approved emission factors.
+- Complete production factor coverage and governance beyond the directly verified UK 2026 rows.
 - OCR for scanned PDFs.
 - Full Excel processing.
 - Complete GHG Protocol Scope 3 categorization.

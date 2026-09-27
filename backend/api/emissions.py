@@ -6,7 +6,7 @@ from backend.services.factor_service import get_emission_factor
 from backend.services.calculator import calculate_emissions
 from backend.database import save_audit
 
-from agents.esg_agent import run_esg_agent
+from agents.esg_agent import run_esg_agent, AgentUnavailableError
 
 
 router = APIRouter()
@@ -36,8 +36,20 @@ def calculate(request: CalculateRequest):
         raise HTTPException(
             status_code=400,
             detail={
-                "status": "UNVERIFIED",
-                "message": factor_data["message"]
+                "status": factor_data.get(
+                    "status",
+                    "REVIEW_REQUIRED"
+                ),
+                "message": factor_data["message"],
+                "factor_version": factor_data.get(
+                    "factor_version"
+                ),
+                "source_url": factor_data.get(
+                    "source_url"
+                ),
+                "source_row_id": factor_data.get(
+                    "source_row_id"
+                )
             }
         )
 
@@ -54,6 +66,15 @@ def calculate(request: CalculateRequest):
         "factor": factor_data["factor"],
         "factor_source": factor_data["source"],
         "factor_year": factor_data["year"],
+        "factor_version": factor_data.get(
+            "factor_version"
+        ),
+        "source_url": factor_data.get(
+            "source_url"
+        ),
+        "source_row_id": factor_data.get(
+            "source_row_id"
+        ),
         "emissions_kg_co2e": result["emissions_kg_co2e"],
         "formula": result["formula"],
         "status": "VERIFIED"
@@ -86,10 +107,11 @@ Perform the following:
 2. Look up the emission factor using the deterministic
    emission factor database.
 
-3. Do NOT invent an emission factor.
+3. Do NOT invent an emission factor. The official registry is
+   authoritative and contains only directly verified UK factors.
 
-4. If a usable factor exists, calculate CO2e using
-   the deterministic calculator.
+4. If a usable official factor exists, calculate CO2e using
+   the deterministic calculator. Otherwise state REVIEW REQUIRED.
 
 5. Report:
    - Scope
@@ -104,7 +126,7 @@ Perform the following:
 6. If the factor is unavailable or unverified,
    clearly say REVIEW REQUIRED.
 
-7. Never describe a DEMO factor as an official factor.
+7. Never describe a REVIEW_REQUIRED or unverified factor as official.
 """
 
     try:
@@ -118,6 +140,23 @@ Perform the following:
             "unit": request.unit,
             "ai_analysis": response
         }
+
+    except AgentUnavailableError as e:
+
+        # AI is an optional enhancement. The deterministic calculation
+        # endpoints still work, so report this as "service unavailable"
+        # rather than an unexpected server error.
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "status": "AI_UNAVAILABLE",
+                "message": str(e),
+                "hint": (
+                    "Deterministic calculation via /calculate is unaffected. "
+                    "Retry once the Lyzr connection or API key is fixed."
+                )
+            }
+        )
 
     except Exception as e:
 

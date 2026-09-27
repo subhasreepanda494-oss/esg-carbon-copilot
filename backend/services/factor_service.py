@@ -31,53 +31,63 @@ def get_emission_factor(activity: str, unit: str):
             ).strip().lower()
 
             if (
-                row_activity == activity.strip().lower()
-                and
-                row_unit == unit.strip().lower()
+                row_activity != activity.strip().lower()
+                or row_unit != unit.strip().lower()
             ):
+                continue
 
-                factor_status = row.get(
-                    "status", "UNVERIFIED"
-                ).strip().upper()
+            factor_status = row.get(
+                "status", "REVIEW_REQUIRED"
+            ).strip().upper()
 
-                try:
-                    factor = float(row["factor"])
-                except (ValueError, TypeError):
-                    return {
-                        "status": "UNVERIFIED",
-                        "message": "Emission factor is not a valid number."
-                    }
+            metadata = {
+                "activity": row.get("activity", ""),
+                "unit": row.get("unit", ""),
+                "source": row.get("source", "Unknown"),
+                "year": row.get("year", "Unknown"),
+                "factor_status": factor_status,
+                "scope": row.get("scope", ""),
+                "factor_version": row.get("factor_version", "Unknown"),
+                "source_url": row.get("source_url", ""),
+                "source_row_id": row.get("source_row_id", ""),
+                "review_reason": row.get("review_reason", "")
+            }
 
-                # DEMO factors must never be treated as verified
-                if factor_status != "OFFICIAL":
-                    return {
-                        "status": "UNVERIFIED",
-                        "activity": row["activity"],
-                        "unit": row["unit"],
-                        "factor": factor,
-                        "source": row.get("source", "Unknown"),
-                        "year": row.get("year", "Unknown"),
-                        "factor_status": factor_status,
-                        "message": (
-                            "Emission factor exists, but it is not "
-                            "officially verified."
-                        )
-                    }
-
+            # Only directly verified rows may be used for calculation.
+            if factor_status != "OFFICIAL":
                 return {
-                    "status": "VERIFIED",
-                    "activity": row["activity"],
-                    "unit": row["unit"],
-                    "factor": factor,
-                    "source": row.get("source", "Unknown"),
-                    "year": row.get("year", "Unknown"),
-                    "factor_status": factor_status,
-                    "provenance": {
-                        "source": row.get("source", "Unknown"),
-                        "year": row.get("year", "Unknown"),
-                        "status": factor_status
-                    }
+                    "status": "REVIEW_REQUIRED",
+                    "factor": None,
+                    "message": (
+                        metadata["review_reason"]
+                        or "A direct official factor match is required."
+                    ),
+                    **metadata
                 }
+
+            try:
+                factor = float(row["factor"])
+            except (ValueError, TypeError, KeyError):
+                return {
+                    "status": "UNVERIFIED",
+                    "message": "Official emission factor is not a valid number.",
+                    **metadata
+                }
+
+            return {
+                "status": "VERIFIED",
+                "factor": factor,
+                "provenance": {
+                    "source": metadata["source"],
+                    "year": metadata["year"],
+                    "status": factor_status,
+                    "scope": metadata["scope"],
+                    "factor_version": metadata["factor_version"],
+                    "source_url": metadata["source_url"],
+                    "source_row_id": metadata["source_row_id"]
+                },
+                **metadata
+            }
 
     return {
         "status": "UNVERIFIED",
